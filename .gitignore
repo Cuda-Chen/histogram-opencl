@@ -36,8 +36,13 @@
 *.out
 *.app
 histogram
+histogram_cl
 
 # output files
 xxxxxx.out
+yyyyyy.out
+
+# debug symbol
+*.dSYM
 
 # End of https://www.gitignore.io/api/c++
