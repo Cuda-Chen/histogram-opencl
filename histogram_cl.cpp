@@ -127,7 +127,7 @@ int main(int argc, char const *argv[])
 	cl_mem d_histogram_results = clCreateBuffer(context, CL_MEM_READ_WRITE, 256 * 3 * sizeof(unsigned int), NULL, NULL);
 
 	// write input data to device
-	err = clEnqueueWriteBuffer(queue, d_image, CL_TRUE, 0, input_size, image, 0, NULL, NULL);
+	err = clEnqueueWriteBuffer(queue, d_image, CL_TRUE, 0, input_size * sizeof(unsigned int), image, 0, NULL, NULL);
 	if(err != CL_SUCCESS)
 	{
 		cerr << "error writing d_image" << endl;
@@ -155,13 +155,12 @@ int main(int argc, char const *argv[])
 		exit(1);
 	}
 
-
-	// wait until the kernel is finish	
-	clFinish(queue);
-
 	// read the result from device
 	err = clEnqueueReadBuffer(queue, d_histogram_results, CL_TRUE, 0, 256 * 3 * sizeof(unsigned int), 
 					histogram_results, 0, NULL, NULL);
+
+	// wait until the kernel is finish
+	clFinish(queue);
 
 	//histogram_results = histogram(image, input_size);
 	for(unsigned int i = 0; i < 256 * 3; ++i) {
