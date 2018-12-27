@@ -105,6 +105,10 @@ int main(int argc, char const *argv[])
 	{
 		cerr << "error building program" << endl;
 		cerr << "Error type: " << err << endl;
+		char build_log[10000];
+		cl_int error2;
+		error2 =  clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 10000, build_log, NULL);
+		cout << "log:" << endl << build_log << endl;
 		exit(1);
 	}
 

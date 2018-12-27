@@ -2,18 +2,23 @@ kernel void histogram(global unsigned int *image_data,
 			global unsigned int *histogram_results,
 			unsigned int _size)
 {
-	int i = get_global_id(0);
-	int j = get_global_id(1);
-	int k = get_global_id(2);
+	int index = get_global_id(0);
+	global unsigned int *ptr;
 
-	if(i < _size)
-		histogram_results[image_data[i * 3]]++;
+	ptr = histogram_results;
 
-	histogram_results += 256;
-	if((j + 1) < _size)
-		histogram_results[image_data[j * 3 + 1]]++;
-
-	histogram_results += 256;
-	if((k + 2) < _size)
-		histogram_results[image_data[k * 3 + 2]]++;
+	if(index % 3 == 0)
+	{
+		ptr[image_data[index]]++;
+	}
+	else if(index % 3 == 1)
+	{
+		ptr = ptr + 256;
+		ptr[image_data[index]]++;
+	}
+	else if(index % 3 == 2)
+	{
+		ptr = ptr + 256 + 256;
+		ptr[image_data[index]]++;
+	}
 }
