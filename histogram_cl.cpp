@@ -123,8 +123,8 @@ int main(int argc, char const *argv[])
 	// stuffs loaded to device
 	histogram_results = new unsigned int [256 * 3 * sizeof(unsigned int)];
 	memset(histogram_results, 0x0, 256 * 3 * sizeof(unsigned int));
-	cl_mem d_image = clCreateBuffer(context, CL_MEM_READ_ONLY, input_size, NULL, NULL);
-	cl_mem d_histogram_results = clCreateBuffer(context, CL_MEM_WRITE_ONLY, 256 * 3 * input_size, NULL, NULL);
+	cl_mem d_image = clCreateBuffer(context, CL_MEM_READ_ONLY, input_size * sizeof(unsigned int), NULL, NULL);
+	cl_mem d_histogram_results = clCreateBuffer(context, CL_MEM_READ_WRITE, 256 * 3 * sizeof(unsigned int), NULL, NULL);
 
 	// write input data to device
 	err = clEnqueueWriteBuffer(queue, d_image, CL_TRUE, 0, input_size, image, 0, NULL, NULL);
@@ -147,7 +147,7 @@ int main(int argc, char const *argv[])
 	// execute the OpenCL kernel
 	size_t global_item_size = input_size; // process the whole list (image)
 	size_t local_item_size = 3;
-	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_item_size, &local_item_size,
+	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_item_size, NULL,
 					0, NULL, NULL);
 	if(err != CL_SUCCESS)
 	{
@@ -160,7 +160,7 @@ int main(int argc, char const *argv[])
 	clFinish(queue);
 
 	// read the result from device
-	err = clEnqueueReadBuffer(queue, d_histogram_results, CL_TRUE, 0, input_size, 
+	err = clEnqueueReadBuffer(queue, d_histogram_results, CL_TRUE, 0, 256 * 3 * sizeof(unsigned int), 
 					histogram_results, 0, NULL, NULL);
 
 	//histogram_results = histogram(image, input_size);
@@ -182,8 +182,9 @@ int main(int argc, char const *argv[])
 	clReleaseContext(context);
 
 	// release host memory
-	free(image);
-	free(histogram_results);
+	delete [] image;
+	delete [] histogram_results;
+	free(source_str);
 
 	return 0;
 }
