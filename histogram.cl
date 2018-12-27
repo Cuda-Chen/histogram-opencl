@@ -8,18 +8,5 @@ kernel void histogram(global unsigned int *image_data,
 
 	ptr = histogram_results;
 
-	if(index % 3 == 0)
-	{
-		ptr[image_data[index]]++;
-	}
-	else if(index % 3 == 1)
-	{
-		ptr = ptr + 256;
-		ptr[image_data[index]]++;
-	}
-	else if(index % 3 == 2)
-	{
-		ptr = ptr + 256 + 256;
-		ptr[image_data[index]]++;
-	}
+	ptr += 256 * index;
 }

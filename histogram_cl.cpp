@@ -145,7 +145,7 @@ int main(int argc, char const *argv[])
 	}
 
 	// execute the OpenCL kernel
-	size_t global_item_size = input_size; // process the whole list (image)
+	size_t global_item_size = 3; // process the whole list (image)
 	size_t local_item_size = 3;
 	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_item_size, NULL,
 					0, NULL, NULL);
