@@ -134,6 +134,14 @@ int main(int argc, char const *argv[])
 		exit(1);
 	}
 
+	// write histogra_result to device
+	err = clEnqueueWriteBuffer(queue, d_histogram_results, CL_TRUE, 0, 256 * 3 * sizeof(unsigned int), histogram_results, 0, NULL, NULL);
+	if(err != CL_SUCCESS)
+	{
+		cerr << "error writing d_histogram_results" << endl;
+		exit(1);
+	}
+
 	// set the arguments to our computer kernel
 	err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &d_image);	
 	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &d_histogram_results);	
