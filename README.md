@@ -1,4 +1,4 @@
-# histogram-opencl
+# histogram Opencl
 stupid histogram program with OpenCL
 
 # How to Compile the Ordinary Version
